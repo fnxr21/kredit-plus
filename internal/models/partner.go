@@ -11,5 +11,4 @@ type Partner struct {
 	BankAccount       string `gorm:"type:varchar(20);column:bank_account;not null"`
 	AccountHolderName string `gorm:"type:varchar(50);column:account_holder_name;not null"`
 	BankName          string `gorm:"type:varchar(20);column:bank_name;not null"`
-	Status            int    `gorm:"type:tinyint(1);column:status;not null;default:'1';comment:0 =inactive,1 = active"`
 }
