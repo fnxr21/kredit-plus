@@ -1,22 +1,38 @@
 version: "3.8"
 
 services:
-  service-rms:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    restart: always
-    container_name: service-rms
+  kreditdb:
+    image: mysql:latest # Consider using a specific version (e.g., postgres:14)
+    container_name: kredit-db
+    # restart: always
     environment:
-      - DB_CHARNTIME=${DB_CHARNTIME}
-      - APP_PORT=5001
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_MST=${DB_MST}
-      - DB_USR=${DB_USR}
-      - DB_IMG=${DB_IMG}
-
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOTPASSWORD} # Use environment variables for security
+      - MYSQL_DATABASE=${DB_MST}
     ports:
-      - "5002:5001"
+      - ${DB_PORT_EXPOSE}:${DB_DEFAULTPORT}
+    volumes:
+      - kreditdb_data:/var/lib/mysql
+
+  # service-kredit:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: .
+  #   restart: always
+  #   container_name: service-kredit
+  #   environment:
+  #     - DB_CHARNTIME=${DB_CHARNTIME}
+  #     - APP_PORT=5001
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_USER=${DB_USER}
+  #     - DB_PASS=${DB_PASS}
+  #     - DB_MST=${DB_MST}
+  #   ports:
+  #     - "5002:5001"
+  #   depends_on:
+  #     - kreditdb
+
+volumes:
+  kreditdb_data:

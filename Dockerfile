@@ -1,5 +1,5 @@
 # Use the official Go image as the build stage.
-FROM golang:1.22 AS firststage
+FROM golang:1.23 AS firststage
 
 WORKDIR /build/
 
@@ -9,7 +9,7 @@ ENV CGO_ENABLED=0
 
 RUN go get
 # Build the Go application with optimizations.
-RUN go build -o rms-monitor
+RUN go build -o kredit-plus
 # Create a lightweight final stage to run the application.
 FROM alpine:latest
 
@@ -28,6 +28,6 @@ ENV TZ=Asia/Jakarta
 # COPY --from=firststage /build/pkg/rsa/gate-sap-private.pem /app/pkg/rsa/gate-sap-private.pem
 # COPY --from=firststage /build/pkg/rsa/gate-sap-public.pem /app/pkg/rsa/gate-sap-public.pem
 
-COPY --from=firststage /build/rms-monitor .
+COPY --from=firststage /build/kredit-plus .
 
-CMD ["./rms-monitor"]
+CMD ["./kredit-plus"]

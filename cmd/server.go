@@ -3,6 +3,7 @@ package cmd
 import (
 	"kredit-plus/internal/database"
 	"kredit-plus/pkg/mysql"
+	"kredit-plus/pkg/validate"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -24,7 +25,7 @@ func RunServer() {
 		AllowMethods: []string{echo.GET, echo.POST, echo.PATCH, echo.DELETE},
 		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
 	}))
-
+	e.Validator = validate.New()
 	PORT := os.Getenv("APP_PORT")
 	// default port
 	if PORT == "" {
