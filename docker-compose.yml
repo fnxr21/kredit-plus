@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  service-rms:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: always
+    container_name: service-rms
+    environment:
+      - DB_CHARNTIME=${DB_CHARNTIME}
+      - APP_PORT=5001
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_MST=${DB_MST}
+      - DB_USR=${DB_USR}
+      - DB_IMG=${DB_IMG}
+
+    ports:
+      - "5002:5001"

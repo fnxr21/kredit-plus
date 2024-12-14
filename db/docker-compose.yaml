@@ -1,0 +1,19 @@
+version: "3.9" # Specify the Docker Compose version
+
+services:
+  kreditdb:
+    image: mysql:latest # Consider using a specific version (e.g., postgres:14)
+    container_name: kredit-db
+    restart: always
+    environment:
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOTPASSWORD} # Use environment variables for security
+      - MYSQL_DATABASE=${DB_DATABASE}
+    ports:
+      - ${DB_PORT_EXPOSE}:${DB_DEFAULTPORT}
+    volumes:
+      - kreditdb_data:/var/lib/mysql
+
+volumes:
+  kreditdb_data:
