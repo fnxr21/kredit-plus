@@ -5,5 +5,9 @@ run:
 # Start the Docker containers in the 'db' directory
 dc:
 	docker-compose up 
-dc-d:
+dc-up:
 	docker-compose up -d
+dc-build:
+	docker build -t nxrfandi/kredit-plus:0.0.0.1 .
+dc-push:
+	docker push nxrfandi/kredit-plus:0.0.0.1
