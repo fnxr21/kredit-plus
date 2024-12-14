@@ -12,5 +12,5 @@ type TransactionDetail struct {
 	InstallmentAmount float64 `gorm:"type:decimal(15,2);column:installment_amount;comment:total cicilan perbulan"`
 	InterestAmount    float64 `gorm:"type:decimal(15,2);column:interest_amount;comment:biaya++ (bunga)"`
 	AssetName         string  `gorm:"type:decimal(15,2);column:asset_name"`
-	UsageSource       string  `gorm:"type:decimal(15,2);column:usage_source;comment:example:nama patner credit"`
+	PatnerID          uint    `gorm:"type:decimal(15,2);column:usage_source;comment:example:nama patner credit"`
 }
