@@ -8,8 +8,8 @@ import (
 
 type TransactionPayment struct {
 	gorm.Model
-	TransactionID uint
-	PaymentDate   time.Time `gorm:"not null"` // Tanggal pembayaran
-	Amount        float64
-	PaymentStatus string `gorm:"type:enum('pending','completed','failed');default:'pending';not null"`
+	TransactionID uint      `gorm:"column:transaction_id"`
+	PaymentDate   time.Time `gorm:"column:payment_date;not null"` // Tanggal pembayaran
+	Amount        float64   `gorm:"type:decimal(15,2);column:amount"`
+	PaymentStatus string    `gorm:"type:enum('pending','completed','failed');default:'pending';not null"`
 }
