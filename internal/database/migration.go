@@ -10,11 +10,14 @@ func RunMigration() {
 	var err error
 	// main migration
 	err = mysql.DB.AutoMigrate(
-		&models.Customer{},
+		&models.MyUser{},
+		&models.Asset{},
 		&models.CreditLimit{},
+		&models.Customer{},
+		&models.PartnerBank{},
 		&models.Partner{},
 		&models.TransactionDetail{},
-		&models.MyUser{},
+		&models.TransactionPayment{},
 	)
 
 	if err != nil {
