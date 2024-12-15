@@ -14,4 +14,6 @@ type TransactionDetail struct {
 	AssetID           uint    `gorm:"column:asset_id"`
 	ConsumerID        uint    `gorm:"column:consumer_id"`
 	PatnerID          uint    `gorm:"column:partner_id"`
+	PartnerID         uint    `gorm:"column:partner_id;comment:partner could be null ,add null when this is from customer or conventional partner"`
+	CustomerID        uint    `gorm:"column:customer_id"`
 }
