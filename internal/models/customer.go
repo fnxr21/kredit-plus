@@ -8,11 +8,11 @@ import (
 
 type Customer struct {
 	gorm.Model
-	Username    string    `gorm:"type:varchar(50);column:username;not null"`
+	Username    string    `gorm:"type:varchar(50);column:username;not null;unique"`
 	Password    string    `gorm:"type:varchar(50);column:password;not null"`
-	Email       string    `gorm:"type:varchar(50);column:email;not null"`
+	Email       string    `gorm:"type:varchar(50);column:email;not null;unique"`
 	PhoneNumber string    `gorm:"type:varchar(20);column:phone_number;not null"`
-	Nik         string    `gorm:"type:varchar(50);column:nik;unique;not null"`
+	Nik         string    `gorm:"type:varchar(50);column:nik;not null;unique"`
 	FullName    string    `gorm:"type:varchar(50);column:full_name;not null"`
 	LegalName   string    `gorm:"type:varchar(50);column:legal_name;not null"`
 	Birthplace  string    `gorm:"type:varchar(50);column:birthplace;not null"`

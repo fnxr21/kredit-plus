@@ -4,11 +4,9 @@ import "gorm.io/gorm"
 
 type Partner struct {
 	gorm.Model
-	Name              string `gorm:"type:varchar(50);column:name;not null"`
-	Email             string `gorm:"type:varchar(50);column:email;not null"`
-	PhoneNumber       string `gorm:"type:varchar(20);column:phone_number;not null"`
-	Address           string `gorm:"type:varchar(20);column:address;not null"`
-	BankAccount       string `gorm:"type:varchar(20);column:bank_account;not null"`
-	AccountHolderName string `gorm:"type:varchar(50);column:account_holder_name;not null"`
-	BankName          string `gorm:"type:varchar(20);column:bank_name;not null"`
+	Name          string `gorm:"type:varchar(50);column:name;not null"`
+	Email         string `gorm:"type:varchar(50);column:email;not null;unique"`
+	PhoneNumber   string `gorm:"type:varchar(50);column:phone_number;not null"`
+	Address       string `gorm:"type:varchar(50);column:address;not null"`
+	PartnerBankID uint   `gorm:"column:partner_bank_id;foreignkey:PartnerBankID;not null"`
 }

@@ -40,7 +40,12 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		// }
 		// if level == 1 {
 		status, _ := claims["status"].(string)
-		if status == "patner" {
+		if status == "costumer" {
+			c.Set("patnerLogin", claims)
+			return next(c)
+		}
+
+		if status == "admin" {
 			c.Set("patnerLogin", claims)
 			return next(c)
 		}

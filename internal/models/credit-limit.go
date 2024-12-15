@@ -6,8 +6,7 @@ import (
 
 type CreditLimit struct {
 	gorm.Model
-	PartnerID   uint    `gorm:"column:partner_id;comment:partner could be null ,add null when this is from customer or conventional partner"`
-	CustomerID  uint    `gorm:"column:customer_id"`
+	CustomerID  uint    `gorm:"column:customer_id;foreignkey:CustomerID"`
 	TenorMonths uint    `gorm:"column:tenor_months;comment:lama bulan pelunasan;not null"`
 	LimitAmount float64 `gorm:"type:decimal(15,2);column:limit_amount;comment:limit transaction;not null"`
 }
