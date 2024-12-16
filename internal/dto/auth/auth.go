@@ -1,10 +1,9 @@
 package authdto
 
 type LoginRequest struct {
-	Username string `json:"username" form:"username" validate:"required"`
-	Password string `json:"password" form:"password" validate:"required"`
+	Username string `form:"username" validate:"required"`
+	Password string `form:"password" validate:"required"`
 }
 type LoginResponse struct {
-	Username string `json:"username" `
-	Name     string `json:"name" `
+	Token string `json:"token"`
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"kredit-plus/internal/database"
+	"kredit-plus/internal/router"
 	"kredit-plus/pkg/mysql"
 	"kredit-plus/pkg/validate"
 	"os"
@@ -26,6 +27,8 @@ func RunServer() {
 		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
 	}))
 	e.Validator = validate.New()
+
+	router.RouteInt(e.Group("/api/v1"))
 	PORT := os.Getenv("APP_PORT")
 	// default port
 	if PORT == "" {
