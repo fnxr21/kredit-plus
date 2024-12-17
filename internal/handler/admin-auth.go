@@ -86,9 +86,8 @@ func (h *handlerAdminAuth) ReauthAdmin(c echo.Context) error {
 
 }
 
-
 func (h *handlerAdminAuth) RegisterAdmin(c echo.Context) error {
-	request := new(admindto.RegisterAdminRequest)
+	request := new(admindto.RequestRegisterAdmin)
 
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
