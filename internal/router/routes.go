@@ -9,4 +9,5 @@ func RouteInt(r *echo.Group) {
 	Customer(r)
 	PartnerBank(r)
 	Partner(r)
+	Asset(r)
 }
