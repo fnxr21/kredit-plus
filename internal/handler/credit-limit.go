@@ -6,6 +6,7 @@ import (
 	"kredit-plus/internal/models"
 	repositories "kredit-plus/internal/repository"
 	errorhandler "kredit-plus/pkg/error"
+	// "log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -15,12 +16,19 @@ import (
 )
 
 type handlerCreditLimit struct {
-	CreditLimitRepository repositories.CreditLimit
-	AdminAuthRepository   repositories.AdminAuth
+	CreditLimitRepository  repositories.CreditLimit
+	AdminAuthRepository    repositories.AdminAuth
+	CustomerAuthRepository repositories.CustomerAuth
 }
 
-func HandlerCreditLimit(CreditLimitRepository repositories.CreditLimit, AdminAuthRepository repositories.AdminAuth) *handlerCreditLimit {
-	return &handlerCreditLimit{CreditLimitRepository: CreditLimitRepository, AdminAuthRepository: AdminAuthRepository}
+func HandlerCreditLimit(
+	CreditLimitRepository repositories.CreditLimit,
+	AdminAuthRepository repositories.AdminAuth,
+	CustomerAuthRepository repositories.CustomerAuth) *handlerCreditLimit {
+	return &handlerCreditLimit{
+		CreditLimitRepository:  CreditLimitRepository,
+		AdminAuthRepository:    AdminAuthRepository,
+		CustomerAuthRepository: CustomerAuthRepository}
 }
 
 func (h *handlerCreditLimit) CreateCreditLimit(c echo.Context) error {
@@ -54,6 +62,77 @@ func (h *handlerCreditLimit) CreateCreditLimit(c echo.Context) error {
 	}
 
 	creditlimit, err := h.CreditLimitRepository.CreateCreditLimit(limit)
+	if err != nil {
+		return errorhandler.ErrorHandler(c, err, "User Not Found", http.StatusBadRequest)
+	}
+
+	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: creditlimit})
+}
+
+func (h *handlerCreditLimit) ListCreditLimit(c echo.Context) error {
+	accessLogin, ok := c.Get("adminLogin").(jwt.MapClaims)
+	// var accessLoginID float64
+	if !ok || accessLogin == nil {
+		userLogin, _ := c.Get("customerLogin").(jwt.MapClaims)
+		if userLogin != nil {
+
+			accessLoginID := userLogin["id"].(float64)
+			// Attempt to reauthorize the customer
+			_, err := h.CustomerAuthRepository.ReauthCustomer(uint(accessLoginID))
+			if err != nil {
+				return errorhandler.ErrorHandler(c, err, "Customer Not Found", http.StatusInternalServerError)
+			}
+		} else {
+			// If neither adminLogin nor customerLogin exists, return an error
+			return errorhandler.ErrorHandler(c, nil, "Admin or Customer Not Found", http.StatusInternalServerError)
+		}
+	} else {
+		// Use adminLogin if it exists
+		accessLoginID := accessLogin["id"].(float64)
+		_, err := h.AdminAuthRepository.Reauth(uint(accessLoginID))
+
+		if err != nil {
+			return errorhandler.ErrorHandler(c, err, "Admin Not Found", http.StatusInternalServerError)
+		}
+	}
+
+	creditlimit, err := h.CreditLimitRepository.ListCreditLimit()
+	if err != nil {
+		return errorhandler.ErrorHandler(c, err, "User Not Found", http.StatusBadRequest)
+	}
+
+	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: creditlimit})
+}
+func (h *handlerCreditLimit) CreditLimitByID(c echo.Context) error {
+	accessLogin, ok := c.Get("adminLogin").(jwt.MapClaims)
+	if !ok || accessLogin == nil {
+		userLogin, _ := c.Get("customerLogin").(jwt.MapClaims)
+		if userLogin != nil {
+
+			accessLoginID := userLogin["id"].(float64)
+			// Attempt to reauthorize the customer
+			_, err := h.CustomerAuthRepository.ReauthCustomer(uint(accessLoginID))
+			if err != nil {
+				return errorhandler.ErrorHandler(c, err, "Customer Not Found", http.StatusInternalServerError)
+			}
+		} else {
+			// If neither adminLogin nor customerLogin exists, return an error
+			return errorhandler.ErrorHandler(c, nil, "Admin or Customer Not Found", http.StatusInternalServerError)
+		}
+	} else {
+		// Use adminLogin if it exists
+		accessLoginID := accessLogin["id"].(float64)
+		_, err := h.AdminAuthRepository.Reauth(uint(accessLoginID))
+
+		if err != nil {
+			return errorhandler.ErrorHandler(c, err, "Admin Not Found", http.StatusInternalServerError)
+		}
+	}
+
+	ID := c.Param("id")
+	LimitID, _ := strconv.Atoi(ID)
+
+	creditlimit, err := h.CreditLimitRepository.CreditLimitByID(uint(LimitID))
 	if err != nil {
 		return errorhandler.ErrorHandler(c, err, "User Not Found", http.StatusBadRequest)
 	}
