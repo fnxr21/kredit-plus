@@ -85,6 +85,8 @@ func (h *handlerAdminAuth) ReauthAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "still-active"})
 
 }
+
+
 func (h *handlerAdminAuth) RegisterAdmin(c echo.Context) error {
 	request := new(admindto.RegisterAdminRequest)
 
@@ -100,10 +102,13 @@ func (h *handlerAdminAuth) RegisterAdmin(c echo.Context) error {
 	if error != nil {
 		return errorhandler.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
 	}
-
+	pass, err := bcrypt.HashingPassword(request.Password)
+	if err != nil {
+		return errorhandler.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
+	}
 	admin := models.MyUser{
 		Username:    request.Username,
-		Password:    request.Password,
+		Password:    pass,
 		PhoneNumber: request.PhoneNumber,
 		Email:       request.Email,
 	}
