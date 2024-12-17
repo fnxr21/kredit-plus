@@ -102,3 +102,20 @@ func (h *handlerCustomer) CustomerSelfieByID(c echo.Context) error {
 	return c.File(user.ImageSelfie)
 
 }
+
+func (h *handlerCustomer) CustomerByList(c echo.Context) error {
+	accessLogin := c.Get("adminLogin").(jwt.MapClaims)
+	accessLoginID := accessLogin["id"].(float64)
+	_, err := h.AdminAuthRepository.Reauth(uint(accessLoginID))
+	if err != nil {
+		return errorhandler.ErrorHandler(c, err, "Admin Not Found", http.StatusInternalServerError)
+	}
+
+	user, err := h.CustomerRepository.ListCustomer()
+	if err != nil {
+		return errorhandler.ErrorHandler(c, err, "Customer Not Found", http.StatusUnauthorized)
+	}
+
+	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user})
+
+}
