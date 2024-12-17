@@ -149,7 +149,6 @@ func (h *handlerCustomerAuth) RegisterCustomer(c echo.Context) error {
 
 func handlerRollbackImage(uploadedFiles map[string]string) {
 
-	log.Println(uploadedFiles)
 	// rollback if failed
 	for _, filePath := range uploadedFiles {
 		// Delete the uploaded files if an error occurs
