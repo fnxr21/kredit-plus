@@ -6,4 +6,5 @@ func RouteInt(r *echo.Group) {
 	AdminAuth(r)
 	CustomerAuth(r)
 	CreditLimit(r)
+	Customer(r)
 }
