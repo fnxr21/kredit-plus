@@ -6,24 +6,25 @@ import (
 	"gorm.io/gorm"
 )
 
-type Auth interface {
+type AdminAuth interface {
 	Register(user models.MyUser) (models.MyUser, error)
 	Login(username string) (models.MyUser, error)
 	Reauth(id uint) (models.MyUser, error)
 }
 
-func RepositoryAuth(db *gorm.DB) *repository {
+func RepositoryAdminAuth(db *gorm.DB) *repository {
 	return &repository{db}
 }
-func (r *repository) Login(username string) (models.MyUser, error) {
-	var user models.MyUser
-	err := r.db.First(&user, "username=?", username).
+
+func (r *repository) Register(user models.MyUser) (models.MyUser, error) {
+	err := r.db.Create(&user).Scan(&user).
 		Error
 
 	return user, err
 }
-func (r *repository) Register(user models.MyUser) (models.MyUser, error) {
-	err := r.db.Create(&user).Scan(&user).
+func (r *repository) Login(username string) (models.MyUser, error) {
+	var user models.MyUser
+	err := r.db.First(&user, "username=?", username).
 		Error
 
 	return user, err

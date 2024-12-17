@@ -1,4 +1,4 @@
-package service
+package handler
 
 import (
 	authdto "kredit-plus/internal/dto/auth"
@@ -15,15 +15,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type handlerAuth struct {
-	AuthRepository repositories.Auth
+type handlerAdminAuth struct {
+	AdminAuthRepository repositories.AdminAuth
 }
 
-func HandlerAuth(AuthRepository repositories.Auth) *handlerAuth {
-	return &handlerAuth{AuthRepository}
+func HandlerAdminAuth(AdminAuthRepository repositories.AdminAuth) *handlerAdminAuth {
+	return &handlerAdminAuth{AdminAuthRepository}
 }
 
-func (h *handlerAuth) Login(c echo.Context) error {
+func (h *handlerAdminAuth) Login(c echo.Context) error {
 	// catch json  type
 	request := new(authdto.LoginRequest)
 	if err := c.Bind(request); err != nil {
@@ -39,7 +39,7 @@ func (h *handlerAuth) Login(c echo.Context) error {
 		return errorhandler.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
 	}
 
-	partner, err := h.AuthRepository.Login(request.Username)
+	partner, err := h.AdminAuthRepository.Login(request.Username)
 	if err != nil {
 		return errorhandler.ErrorHandler(c, err, "User Not Found", http.StatusBadRequest)
 	}
