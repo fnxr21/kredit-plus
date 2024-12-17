@@ -9,7 +9,7 @@ import (
 type Partner interface {
 	CreatePartner(user models.Partner) (models.Partner, error)
 	ListPartner() ([]models.Partner, error)
-	PartnerByID(id int) (models.Partner, error)
+	PartnerByID(id uint) (models.Partner, error)
 }
 
 func RepositoryPartner(db *gorm.DB) *repository {
@@ -17,21 +17,21 @@ func RepositoryPartner(db *gorm.DB) *repository {
 }
 
 func (r *repository) CreatePartner(user models.Partner) (models.Partner, error) {
-	err := r.db.Create(&user).Scan(&user).
+	err := r.db.Create(&user).Scan(&user).Preload("PartnerBank").
 		Error
 
 	return user, err
 }
 func (r *repository) ListPartner() ([]models.Partner, error) {
 	var partner []models.Partner
-	err := r.db.Find(&partner).
+	err := r.db.Find(&partner).Preload("PartnerBank").
 		Error
 
 	return partner, err
 }
-func (r *repository) PartnerByID(id int) (models.Partner, error) {
+func (r *repository) PartnerByID(id uint) (models.Partner, error) {
 	var partner models.Partner
-	err := r.db.First(&partner).
+	err := r.db.First(&partner, id).Preload("PartnerBank").
 		Error
 
 	return partner, err
