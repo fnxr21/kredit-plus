@@ -1,14 +1,14 @@
 package customerdto
 
 type RequestRegisterCustomer struct {
-	Username    string `gorm:"type:varchar(100);column:username;not null;unique"`
-	Password    string `gorm:"type:varchar(100);column:password;not null"`
-	Email       string `gorm:"type:varchar(100);column:email;not null;unique"`
-	PhoneNumber string `gorm:"type:varchar(100);column:phone_number;not null"`
-	Nik         string `gorm:"type:varchar(100);column:nik;not null;unique"`
-	FullName    string `gorm:"type:varchar(100);column:full_name;not null"`
-	LegalName   string `gorm:"type:varchar(100);column:legal_name;not null"`
-	Birthplace  string `gorm:"type:varchar(100);column:birthplace;not null"`
-	BirthDate   string `gorm:"type:date;column:dob;not null"`
-	Salary      string `gorm:"type:decimal(15,2);column:salary;not null"`
+	Username    string `form:"username" validate:"required"`
+	Password    string `form:"password" validate:"required"`
+	Email       string `form:"email" validate:"required"`
+	PhoneNumber string `form:"phone_number" validate:"required"`
+	Nik         string `form:"nik" validate:"required"`
+	FullName    string `form:"full_name" validate:"required"`
+	LegalName   string `form:"legal_name" validate:"required"`
+	Birthplace  string `form:"birthplace" validate:"required"`
+	BirthDate   string `form:"dob" validate:"required"`
+	Salary      string `form:"salary" validate:"required"`
 }

@@ -15,63 +15,75 @@ import (
 	"time"
 )
 
-func UploadFile(next echo.HandlerFunc) echo.HandlerFunc {
+func UploadFileCustomer(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		requiredFields := []string{"ktp", "selfie"}
+		uploadedFiles := make(map[string]string) // Store file paths for uploaded files
 
-		file, err := c.FormFile("file")
-		if err != nil {
-			return fmt.Errorf("Image not found. Please upload a valid file.")
-		}
-
-		src, err := file.Open()
-		if err != nil {
-			return fmt.Errorf("Failed to open the uploaded file.")
-		}
-		defer src.Close()
-
-		if file.Size > 5*1024*1024 {
-			return fmt.Errorf("file size exceeds the 5MB limit")
-		}
-		if _, err := os.Stat("public"); os.IsNotExist(err) {
-			err := os.Mkdir("public", os.ModePerm)
+		for _, fieldName := range requiredFields {
+			file, err := c.FormFile(fieldName)
 			if err != nil {
-				return fmt.Errorf("Failed to create 'public' directory.") // Handle error
+				return fmt.Errorf("File %s not found. Please upload both KTP and Selfie.", fieldName)
 			}
-		}
-		buf := make([]byte, 512)
-		_, err = src.Read(buf)
-		if err != nil && err.Error() != "EOF" {
-			return err
+
+			src, err := file.Open()
+			if err != nil {
+				return fmt.Errorf("Failed to open the uploaded file for %s.", fieldName)
+			}
+			defer src.Close()
+
+			// Check file size
+			if file.Size > 5*1024*1024 {
+				return fmt.Errorf("File %s exceeds the 5MB size limit", fieldName)
+			}
+
+			// Ensure "public" directory exists
+			if _, err := os.Stat("public"); os.IsNotExist(err) {
+				err := os.Mkdir("public", os.ModePerm)
+				if err != nil {
+					return fmt.Errorf("Failed to create 'public' directory.")
+				}
+			}
+
+			// Read file to detect MIME type
+			buf := make([]byte, 512)
+			_, err = src.Read(buf)
+			if err != nil && err.Error() != "EOF" {
+				return err
+			}
+
+			mimeType := http.DetectContentType(buf)
+			if mimeType != "image/jpeg" && mimeType != "image/png" {
+				return fmt.Errorf("Invalid file type for %s: %s. Only JPEG and PNG are allowed.", fieldName, mimeType)
+			}
+
+			// Generate new file name
+			extension := filepath.Ext(file.Filename)
+			fileNameWithoutExt := file.Filename[:len(file.Filename)-len(extension)]
+			timestamp := fmt.Sprintf("%d", time.Now().Unix()) // Timestamp for uniqueness
+			newFileName := fmt.Sprintf("public/%s-%s%s", fileNameWithoutExt, timestamp, extension)
+
+			// Create destination file
+			dst, err := os.Create(newFileName)
+			if err != nil {
+				return err
+			}
+			defer dst.Close()
+
+			// Reset the file reader and copy content
+			_, err = src.Seek(0, io.SeekStart)
+			if err != nil {
+				return err
+			}
+			if _, err = io.Copy(dst, src); err != nil {
+				return err
+			}
+
+			uploadedFiles[fieldName] = newFileName
 		}
 
-		// Detect MIME type
-		mimeType := http.DetectContentType(buf)
-
-		if mimeType != "image/jpeg" && mimeType != "image/png" {
-			return fmt.Errorf("invalid file type: %s. Only JPEG and PNG are allowed", mimeType)
-		}
-		// Create a destination file
-		extension := filepath.Ext(file.Filename)
-		fileNameWithoutExt := file.Filename[:len(file.Filename)-len(extension)]
-		timestamp := fmt.Sprintf("%d", time.Now().Unix()) // Convert Unix timestamp to string
-		newFileName := fmt.Sprintf("public/%s%s", fileNameWithoutExt+"-"+timestamp, extension)
-
-		dst, err := os.Create(newFileName)
-		if err != nil {
-			return err
-		}
-		defer dst.Close()
-		// Reset the file reader and copy to the destination
-		_, err = src.Seek(0, io.SeekStart)
-		if err != nil {
-			return err
-		}
-
-		// Copy
-		if _, err = io.Copy(dst, src); err != nil {
-			return err
-		}
-
+		// Store uploaded file paths in the context
+		c.Set("uploadedFiles", uploadedFiles)
 		return next(c)
 	}
 }

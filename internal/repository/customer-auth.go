@@ -7,12 +7,20 @@ import (
 )
 
 type CustomerAuth interface {
+	RegisterCustomer(user models.Customer) (models.Customer, error)
 	LoginCustomer(username string) (models.Customer, error)
 	ReauthCustomer(id uint) (models.Customer, error)
 }
 
 func RepositoryCustomerAuth(db *gorm.DB) *repository {
 	return &repository{db}
+}
+
+func (r *repository) RegisterCustomer(user models.Customer) (models.Customer, error) {
+	err := r.db.Create(&user).Scan(&user).
+		Error
+
+	return user, err
 }
 
 func (r *repository) LoginCustomer(username string) (models.Customer, error) {
