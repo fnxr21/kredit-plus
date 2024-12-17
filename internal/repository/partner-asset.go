@@ -9,7 +9,7 @@ import (
 type Asset interface {
 	CreateAsset(user models.Asset) (models.Asset, error)
 	ListAsset() ([]models.Asset, error)
-	AssetByID(id int) (models.Asset, error)
+	AssetByID(id uint) (models.Asset, error)
 }
 
 func RepositoryAsset(db *gorm.DB) *repository {
@@ -29,7 +29,7 @@ func (r *repository) ListAsset() ([]models.Asset, error) {
 
 	return asset, err
 }
-func (r *repository) AssetByID(id int) (models.Asset, error) {
+func (r *repository) AssetByID(id uint) (models.Asset, error) {
 	var asset models.Asset
 	err := r.db.First(&asset).
 		Error

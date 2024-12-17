@@ -63,7 +63,7 @@ func (h *handlerCreditLimit) CreateCreditLimit(c echo.Context) error {
 
 	creditlimit, err := h.CreditLimitRepository.CreateCreditLimit(limit)
 	if err != nil {
-		return errorhandler.ErrorHandler(c, err, "User Not Found", http.StatusBadRequest)
+		return errorhandler.ErrorHandler(c, err, "Failed Create Limit", http.StatusBadRequest)
 	}
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: creditlimit})

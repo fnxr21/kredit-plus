@@ -17,3 +17,4 @@ func Customer(e *echo.Group) {
 	e.GET("/admin/customer/ktp/:id", middleware.Auth(h.CustomerKTPByID))
 	e.GET("/admin/customer/selfie/:id", middleware.Auth(h.CustomerSelfieByID))
 }
+ 
