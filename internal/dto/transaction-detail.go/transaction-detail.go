@@ -1,15 +1,12 @@
 package transactiondetaildto
 
 type RequestTransactionDetail struct {
-	ContractNumber    uint    `json:"contract_number"`
-	OTR               string `json:"otr"`
-	AdminFee          string `json:"admin_fee"`
-	InstallmentAmount string `json:"installment_amount"`
-	InterestAmount    string `json:"interest_amount"`
-	Status            string  `json:"payment"`
-	CreditLimitID     uint    `json:"credit_limit_id"`
-	PartnerBankID     uint    `json:"partner_bank_id"`
-	AssetID           uint    `json:"asset_id"`
-	PartnerID         uint    `json:"partner_id"`
-	CustomerID        uint    `json:"customer_id"`
+	OTR               string `form:"otr" validate:"required"`
+	AdminFee          string `form:"admin_fee" validate:"required"`
+	InstallmentAmount string `form:"installment_amount" validate:"required"`
+	InterestAmount    string `form:"interest_amount" validate:"required"`
+	CreditLimitID     uint   `form:"credit_limit_id" validate:"required"`
+	PartnerBankID     uint   `form:"partner_bank_id" validate:"required"`
+	AssetID           uint   `form:"asset_id" validate:"required"`
+	PartnerID         uint   `form:"partner_id"`
 }

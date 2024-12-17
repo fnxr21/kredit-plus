@@ -9,7 +9,7 @@ import (
 type TransactionDetail interface {
 	CreateTransactionDetail(user models.TransactionDetail) (models.TransactionDetail, error)
 	ListTransactionDetail() ([]models.TransactionDetail, error)
-	TransactionDetailByID(id int) (models.TransactionDetail, error)
+	TransactionDetailByID(id uint) (models.TransactionDetail, error)
 }
 
 func RepositoryTransactionDetail(db *gorm.DB) *repository {
@@ -29,7 +29,7 @@ func (r *repository) ListTransactionDetail() ([]models.TransactionDetail, error)
 
 	return detail, err
 }
-func (r *repository) TransactionDetailByID(id int) (models.TransactionDetail, error) {
+func (r *repository) TransactionDetailByID(id uint) (models.TransactionDetail, error) {
 	var detail models.TransactionDetail
 	err := r.db.First(&detail).
 		Error

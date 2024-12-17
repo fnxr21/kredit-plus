@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type TransactionDetail struct {
 	gorm.Model
-	ContractNumber    uint        `gorm:"column:contract_number;unique;not null;unique"`
+	ContractNumber    string      `gorm:"type:varchar(200);column:contract_number;unique;not null;unique"`
 	OTR               float64     `gorm:"type:decimal(15,2);column:otr;comment:2 jenis: white godds(kulkas) dan total biaya adminstrasi dll(mobil)"`
 	AdminFee          float64     `gorm:"type:decimal(15,2);column:admin_fee"`
 	InstallmentAmount float64     `gorm:"type:decimal(15,2);column:installment_amount;comment:total cicilan perbulan"`
