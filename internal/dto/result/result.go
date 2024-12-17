@@ -16,3 +16,9 @@ type ErrorResult struct {
 	Status  int    `json:"code"`
 	Message string `json:"message"`
 }
+type ErrorResultDto struct {
+	// ResponseCode string `json:"code"`
+	Status  int    `json:"code"`
+	Message string `json:"message"`
+	Error   error  `json:"error"`
+}

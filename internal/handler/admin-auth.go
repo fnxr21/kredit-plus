@@ -1,8 +1,10 @@
 package handler
 
 import (
+	admindto "kredit-plus/internal/dto/admin"
 	authdto "kredit-plus/internal/dto/auth"
 	dto "kredit-plus/internal/dto/result"
+	"kredit-plus/internal/models"
 	repositories "kredit-plus/internal/repository"
 	"kredit-plus/pkg/bcrypt"
 	errorhandler "kredit-plus/pkg/error"
@@ -81,5 +83,35 @@ func (h *handlerAdminAuth) ReauthAdmin(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "still-active"})
+
+}
+func (h *handlerAdminAuth) RegisterAdmin(c echo.Context) error {
+	request := new(admindto.RegisterAdminRequest)
+
+	if err := c.Bind(request); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+	}
+	// Step 2: Bind the incoming JSON payload to the LoginRequest object.
+	if err := c.Bind(request); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+	}
+	error := c.Validate(request)
+
+	if error != nil {
+		return errorhandler.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
+	}
+
+	admin := models.MyUser{
+		Username:    request.Username,
+		Password:    request.Password,
+		PhoneNumber: request.PhoneNumber,
+		Email:       request.Email,
+	}
+	user, err := h.AdminAuthRepository.Register(admin)
+	if err != nil {
+		return errorhandler.ErrorHandler(c, err, "Register Failed", http.StatusUnauthorized)
+	}
+
+	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "Register"})
 
 }
