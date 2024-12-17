@@ -33,20 +33,14 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusUnauthorized, dto.ErrorResult{Status: http.StatusUnauthorized, Message: "unauthorized"})
 		}
-
-		// level, ok := claims["level"].(float64)
-		// if !ok {
-		// 	return c.JSON(http.StatusUnauthorized, "unauthorized")
-		// }
-		// if level == 1 {
 		status, _ := claims["status"].(string)
 		if status == "costumer" {
-			c.Set("patnerLogin", claims)
+			c.Set("costumerLogin", claims)
 			return next(c)
 		}
 
 		if status == "admin" {
-			c.Set("patnerLogin", claims)
+			c.Set("adminLogin", claims)
 			return next(c)
 		}
 		// }
