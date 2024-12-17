@@ -82,10 +82,10 @@ func (h *handlerCustomerAuth) ReauthCustomer(c echo.Context) error {
 
 	user, err := h.CustomerAuthRepository.ReauthCustomer(uint(customerID))
 	if err != nil {
-		return errorhandler.ErrorHandler(c, err, "customer-not-found", http.StatusUnauthorized)
+		return errorhandler.ErrorHandler(c, err, "Customer Not Found", http.StatusUnauthorized)
 	}
 
-	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "still-active"})
+	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "Still Active"})
 
 }
 
@@ -143,7 +143,7 @@ func (h *handlerCustomerAuth) RegisterCustomer(c echo.Context) error {
 		return errorhandler.ErrorHandler(c, err, "Register Failed", http.StatusUnauthorized)
 	}
 
-	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "Register"})
+	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: user.Username + " " + "Register"})
 
 }
 

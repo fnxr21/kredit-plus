@@ -79,10 +79,10 @@ func (h *handlerAdminAuth) ReauthAdmin(c echo.Context) error {
 
 	user, err := h.AdminAuthRepository.Reauth(uint(adminID))
 	if err != nil {
-		return errorhandler.ErrorHandler(c, err, "admin-not-found", http.StatusUnauthorized)
+		return errorhandler.ErrorHandler(c, err, "Admin Not Found", http.StatusUnauthorized)
 	}
 
-	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "still-active"})
+	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "Still Active"})
 
 }
 

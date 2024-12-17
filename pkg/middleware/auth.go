@@ -5,6 +5,7 @@ import (
 
 	dto "kredit-plus/internal/dto/result"
 	jwtToken "kredit-plus/pkg/jwt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -35,11 +36,13 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		status, _ := claims["status"].(string)
 		if status == "customer" {
+			log.Println("customer", claims)
 			c.Set("customerLogin", claims)
 			return next(c)
 		}
 
 		if status == "admin" {
+			log.Println("admin", claims)
 			c.Set("adminLogin", claims)
 			return next(c)
 		}

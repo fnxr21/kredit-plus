@@ -12,3 +12,14 @@ type RequestRegisterCustomer struct {
 	BirthDate   string `form:"dob" validate:"required"`
 	Salary      string `form:"salary" validate:"required"`
 }
+
+//cancel ... to risky for shared
+type ResponseRegisterCustomer struct {
+	Username    string `json:"username"`
+	Email       string `json:"email"`
+	PhoneNumber string `json:"phone_number"`
+	FullName    string `json:"full_name"`
+	Birthplace  string `json:"birthplace"`
+	BirthDate   string `json:"dob"`
+	Salary      string `json:"salary"`
+}
