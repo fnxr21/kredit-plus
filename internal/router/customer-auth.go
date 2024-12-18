@@ -15,4 +15,5 @@ func CustomerAuth(e *echo.Group) {
 	e.POST("/customer/register", middleware.UploadFileCustomer(h.RegisterCustomer))
 	e.POST("/customer/login", h.LoginCustomer)
 	e.GET("/customer/reauth", middleware.Auth(h.ReauthCustomer))
+	e.GET("/customer/logout", middleware.Auth(h.LogoutCustomer))
 }

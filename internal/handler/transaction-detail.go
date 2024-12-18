@@ -46,10 +46,7 @@ func (h *handlerTransactionDetail) CreateTransactionDetail(c echo.Context) error
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-	// Step 2: Bind the incoming JSON payload to the.
-	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
-	}
+	
 	error := c.Validate(request)
 
 	if error != nil {

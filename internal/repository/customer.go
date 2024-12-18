@@ -24,7 +24,7 @@ func (r *repository) ListCustomer() ([]models.Customer, error) {
 }
 func (r *repository) CustomerByID(id int) (models.Customer, error) {
 	var customer models.Customer
-	err := r.db.First(&customer).
+	err := r.db.First(&customer, "id=?", id).
 		Error
 
 	return customer, err

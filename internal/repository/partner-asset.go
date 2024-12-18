@@ -31,7 +31,7 @@ func (r *repository) ListAsset() ([]models.Asset, error) {
 }
 func (r *repository) AssetByID(id uint) (models.Asset, error) {
 	var asset models.Asset
-	err := r.db.First(&asset).
+	err := r.db.First(&asset, "id=?", id).
 		Error
 
 	return asset, err

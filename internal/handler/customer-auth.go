@@ -35,10 +35,7 @@ func (h *handlerCustomerAuth) LoginCustomer(c echo.Context) error {
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-	// Step 2: Bind the incoming JSON payload to the LoginRequest object.
-	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
-	}
+	
 	error := c.Validate(request)
 
 	if error != nil {
@@ -144,6 +141,19 @@ func (h *handlerCustomerAuth) RegisterCustomer(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: user.Username + " " + "Register"})
+
+}
+func (h *handlerCustomerAuth) LogoutCustomer(c echo.Context) error {
+	delete := &http.Cookie{
+		Name:     "Auth",
+		Value:    "none",
+		Expires:  time.Now(),
+		Path:     "/",
+		HttpOnly: true,
+	}
+	c.SetCookie(delete)
+
+	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: "Customer logged out successfully"})
 
 }
 

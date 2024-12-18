@@ -31,7 +31,7 @@ func (r *repository) ListCreditLimit() ([]models.CreditLimit, error) {
 }
 func (r *repository) CreditLimitByID(id uint) (models.CreditLimit, error) {
 	var limit models.CreditLimit
-	err := r.db.First(&limit).
+	err := r.db.First(&limit, "id=?", id).
 		Error
 
 	return limit, err

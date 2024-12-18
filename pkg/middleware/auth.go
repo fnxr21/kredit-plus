@@ -35,19 +35,21 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, dto.ErrorResult{Status: http.StatusUnauthorized, Message: "unauthorized"})
 		}
 		status, _ := claims["status"].(string)
-		if status == "customer" {
+		
+		switch status {
+		case "customer":
 			log.Println("customer", claims)
 			c.Set("customerLogin", claims)
 			return next(c)
-		}
-
-		if status == "admin" {
+		case "admin":
 			log.Println("admin", claims)
 			c.Set("adminLogin", claims)
 			return next(c)
+		default:
+			// Optional: handle cases where status doesn't match "customer" or "admin"
+			log.Println("unauthorized access", claims)
+			return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
 		}
-		// }
 
-		return c.JSON(http.StatusUnauthorized, "unauthorized-not-found")
 	}
 }

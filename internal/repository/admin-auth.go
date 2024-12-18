@@ -17,7 +17,7 @@ func RepositoryAdminAuth(db *gorm.DB) *repository {
 }
 
 func (r *repository) Register(user models.MyUser) (models.MyUser, error) {
-	err := r.db.Create(&user).Scan(&user).
+	err := r.db.Create(&user).
 		Error
 
 	return user, err
@@ -31,6 +31,6 @@ func (r *repository) Login(username string) (models.MyUser, error) {
 }
 func (r *repository) Reauth(id uint) (models.MyUser, error) {
 	var user models.MyUser
-	err := r.db.First(&user, id).Error
+	err := r.db.First(&user, "id=?", id).Error
 	return user, err
 }
