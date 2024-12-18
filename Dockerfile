@@ -25,8 +25,9 @@ RUN apk add --no-cache tzdata gcompat
 
 ENV TZ=Asia/Jakarta
 
-# COPY --from=firststage /build/pkg/rsa/gate-sap-private.pem /app/pkg/rsa/gate-sap-private.pem
-# COPY --from=firststage /build/pkg/rsa/gate-sap-public.pem /app/pkg/rsa/gate-sap-public.pem
+# rsa 
+# COPY --from=firststage /build/pkg/rsa/private.pem /app/pkg/rsa/private.pem
+# COPY --from=firststage /build/pkg/rsa/public.pem /app/pkg/rsa/public.pem
 
 COPY --from=firststage /build/kredit-plus .
 
