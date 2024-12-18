@@ -31,7 +31,7 @@ func (r *repository) ListTransactionDetail() ([]models.TransactionDetail, error)
 }
 func (r *repository) TransactionDetailByID(id uint) (models.TransactionDetail, error) {
 	var detail models.TransactionDetail
-	err := r.db.First(&detail).
+	err := r.db.First(&detail, "id=?", id).
 		Error
 
 	return detail, err

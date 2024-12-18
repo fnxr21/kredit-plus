@@ -8,6 +8,7 @@ import (
 	errorhandler "kredit-plus/pkg/error"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	// "log"
@@ -33,10 +34,15 @@ func HandlerTransactionPayment(
 		CustomerAuthRepository:       CustomerAuthRepository}
 }
 
+var mu sync.Mutex
+
 func (h *handlerTransactionPayment) CreateTransactionPayment(c echo.Context) error {
+	// lock
+	mu.Lock()
+	defer mu.Unlock()
+
 	accessLogin := c.Get("customerLogin").(jwt.MapClaims)
 	accessLoginID := accessLogin["id"].(float64)
-
 	_, err := h.CustomerAuthRepository.ReauthCustomer(uint(accessLoginID))
 	if err != nil {
 		return errorhandler.ErrorHandler(c, err, "Admin Not Found", http.StatusInternalServerError)
@@ -46,17 +52,16 @@ func (h *handlerTransactionPayment) CreateTransactionPayment(c echo.Context) err
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-	// Step 2: Bind the incoming JSON payload to the.
-	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
-	}
+
 	error := c.Validate(request)
 
 	if error != nil {
 		return errorhandler.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
 	}
-	Amount, _ := strconv.ParseFloat(strings.TrimSpace(request.Amount), 64)
-
+	Amount, err := strconv.ParseFloat(strings.TrimSpace(request.Amount), 64)
+	if err != nil {
+		return errorhandler.ErrorHandler(c, err, "Invalid Amount Format", http.StatusBadRequest)
+	}
 	// Format the time to "YYYYMMDDHHMMSS"
 
 	detail := models.TransactionPayment{

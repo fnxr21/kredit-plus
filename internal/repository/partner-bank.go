@@ -31,7 +31,7 @@ func (r *repository) ListPartnerBank() ([]models.PartnerBank, error) {
 }
 func (r *repository) PartnerBankByID(id uint) (models.PartnerBank, error) {
 	var bank models.PartnerBank
-	err := r.db.First(&bank).
+	err := r.db.First(&bank,"id=?", id).
 		Error
 
 	return bank, err

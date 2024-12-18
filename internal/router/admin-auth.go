@@ -15,4 +15,5 @@ func AdminAuth(e *echo.Group) {
 	e.POST("/admin/register", h.RegisterAdmin)
 	e.POST("/admin/login", h.Login)
 	e.GET("/admin/reauth", middleware.Auth(h.ReauthAdmin))
+	e.GET("/admin/logout", middleware.Auth(h.LogoutAdmin))
 }
