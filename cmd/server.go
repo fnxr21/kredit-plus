@@ -14,7 +14,7 @@ import (
 
 func RunServer() {
 
-	// dotEnv()
+	dotEnv()
 
 	e := echo.New()
 
