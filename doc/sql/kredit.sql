@@ -95,9 +95,9 @@ CREATE TABLE IF NOT EXISTS `my_user` (
   UNIQUE KEY `uni_my_user_username` (`username`),
   UNIQUE KEY `uni_my_user_email` (`email`),
   KEY `idx_my_user_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table kredit_mst.my_user: ~1 rows (approximately)
+-- Dumping data for table kredit_mst.my_user: ~0 rows (approximately)
 INSERT IGNORE INTO `my_user` (`id`, `created_at`, `updated_at`, `deleted_at`, `username`, `password`, `phone_number`, `email`) VALUES
 	(1, '2024-12-19 00:17:50.000', NULL, NULL, 'admin', '$2a$10$1Rff5M8Vq7A7gTBfi.T2puamxaxaMluWbm0gyFFKK7cnF90eXsNgq', '0893213124', 'test@gmail');
 
