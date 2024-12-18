@@ -9,7 +9,7 @@ import (
 type CreditLimit interface {
 	CreateCreditLimit(user models.CreditLimit) (models.CreditLimit, error)
 	ListCreditLimit() ([]models.CreditLimit, error)
-	CreditLimitByID(id int) (models.CreditLimit, error)
+	CreditLimitByID(id uint) (models.CreditLimit, error)
 }
 
 func RepositoryCreditLimit(db *gorm.DB) *repository {
@@ -29,7 +29,7 @@ func (r *repository) ListCreditLimit() ([]models.CreditLimit, error) {
 
 	return limit, err
 }
-func (r *repository) CreditLimitByID(id int) (models.CreditLimit, error) {
+func (r *repository) CreditLimitByID(id uint) (models.CreditLimit, error) {
 	var limit models.CreditLimit
 	err := r.db.First(&limit).
 		Error

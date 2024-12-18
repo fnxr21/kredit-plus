@@ -9,7 +9,7 @@ import (
 type PartnerBank interface {
 	CreatePartnerBank(user models.PartnerBank) (models.PartnerBank, error)
 	ListPartnerBank() ([]models.PartnerBank, error)
-	PartnerBankByID(id int) (models.PartnerBank, error)
+	PartnerBankByID(id uint) (models.PartnerBank, error)
 }
 
 func RepositoryPartnerBank(db *gorm.DB) *repository {
@@ -29,7 +29,7 @@ func (r *repository) ListPartnerBank() ([]models.PartnerBank, error) {
 
 	return bank, err
 }
-func (r *repository) PartnerBankByID(id int) (models.PartnerBank, error) {
+func (r *repository) PartnerBankByID(id uint) (models.PartnerBank, error) {
 	var bank models.PartnerBank
 	err := r.db.First(&bank).
 		Error

@@ -1,1 +1,3 @@
 # .env
+# Ignore the 'public' folder and its contents
+public/

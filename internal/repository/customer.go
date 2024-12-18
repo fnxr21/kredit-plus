@@ -7,7 +7,6 @@ import (
 )
 
 type Customer interface {
-	CreateCustomer(user models.Customer) (models.Customer, error)
 	ListCustomer() ([]models.Customer, error)
 	CustomerByID(id int) (models.Customer, error)
 }
@@ -16,12 +15,6 @@ func RepositoryCustomer(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) CreateCustomer(user models.Customer) (models.Customer, error) {
-	err := r.db.Create(&user).Scan(&user).
-		Error
-
-	return user, err
-}
 func (r *repository) ListCustomer() ([]models.Customer, error) {
 	var customer []models.Customer
 	err := r.db.Find(&customer).

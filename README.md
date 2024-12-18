@@ -5,7 +5,7 @@ Service kredit
 ## Link
 
 - [ERD](https://drawsql.app/teams/team-1756/diagrams/kredit)
-- [Postman Api](https://www.postman.com/crimson-crater-385688/workspace/private/collection/27541101-9d6c7a2b-bb01-4afd-a537-a78a8d7b6110?action=share&creator=27541101)
+- [Postman Api](https://crimson-crater-385688.postman.co/workspace/Open~b2b49bd4-fdb3-472f-ae87-d815a933728a/collection/27541101-9d6c7a2b-bb01-4afd-a537-a78a8d7b6110?action=share&creator=27541101&active-environment=27541101-2db38100-c936-4952-887b-cc478f8892ec)
 - [Docker Hub](https://hub.docker.com/repository/docker/nxrfandi/kredit-plus/general)
 
 ## folder structur

@@ -9,7 +9,7 @@ import (
 type TransactionPayment interface {
 	CreateTransactionPayment(user models.TransactionPayment) (models.TransactionPayment, error)
 	ListTransactionPayment() ([]models.TransactionPayment, error)
-	TransactionPaymentByID(id int) (models.TransactionPayment, error)
+	TransactionPaymentByID(id uint) (models.TransactionPayment, error)
 }
 
 func RepositoryTransactionPayment(db *gorm.DB) *repository {
@@ -29,7 +29,7 @@ func (r *repository) ListTransactionPayment() ([]models.TransactionPayment, erro
 
 	return payment, err
 }
-func (r *repository) TransactionPaymentByID(id int) (models.TransactionPayment, error) {
+func (r *repository) TransactionPaymentByID(id uint) (models.TransactionPayment, error) {
 	var payment models.TransactionPayment
 	err := r.db.First(&payment).
 		Error

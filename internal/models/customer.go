@@ -18,6 +18,6 @@ type Customer struct {
 	Birthplace  string    `gorm:"type:varchar(100);column:birthplace;not null"`
 	BirthDate   time.Time `gorm:"type:date;column:dob;not null"`
 	Salary      float64   `gorm:"type:decimal(15,2);column:salary;not null"`
-	ImageKTP    string    `gorm:"type:varchar(100);column:image_ktp;comment:pathfile;not null"`
-	ImageSelfie string    `gorm:"type:varchar(100);column:image_selfie;comment:pathfile;not null"`
+	ImageKTP    string    `gorm:"type:varchar(255);column:image_ktp;comment:pathfile;not null"`
+	ImageSelfie string    `gorm:"type:varchar(255);column:image_selfie;comment:pathfile;not null"`
 }
