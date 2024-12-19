@@ -145,8 +145,8 @@ APP_PORT=2001 # Port on which the service will be exposed
 
 # Database Configuration
 # Host settings for local or Dockerized environments
-DB_HOST1=host.docker.internal # Use this for Docker environments on Windows and macOS.
-DB_HOST=127.0.0.1 # Use this for local environment (localhost), adjust for different configurations.
+DB_HOST=host.docker.internal # Use this for Docker environments on Windows and macOS.
+DB_HOST1=127.0.0.1 # Use this for local environment (localhost), adjust for different configurations.
 DB_PORT=1306  # Database port
 DB_USER=roo21! # Database username
 DB_PASS=root21!Save # Database user password
@@ -163,6 +163,18 @@ DB_DEFAULTPORT=3306 # Default MySQL port, don't change this unless necessary
 
 ## Docker Compose
 
+Clone the project
+
+```bash
+  git clone https://github.com/fnxr21/kredit-plus
+```
+
+Go to the project directory
+
+```bash
+  cd kredit-plus
+```
+
 To use Docker-compose.yaml run
 
 ```bash
@@ -176,22 +188,6 @@ after build and success than "cntrl + c" ,than run
 ```
 
 ## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://github.com/fnxr21/kredit-plus
-```
-
-Go to the project directory
-
-```bash
-  cd kredit-plus
-```
-
-```bash
-  go mod tidy
-```
 
 Start the server
 
