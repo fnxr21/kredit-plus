@@ -16,7 +16,8 @@ git remote -v
 
 echo 'Enter the commit message:'
 
+read remote
 
-git push origin dev
+git push "${remote}" "${branch}"
 
 echo 'Thank you for updated your repository'
