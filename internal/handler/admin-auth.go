@@ -89,7 +89,7 @@ func (h *handlerAdminAuth) RegisterAdmin(c echo.Context) error {
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-	
+
 	error := c.Validate(request)
 
 	if error != nil {
@@ -126,4 +126,79 @@ func (h *handlerAdminAuth) LogoutAdmin(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: "Admin logged out successfully"})
 
+}
+
+type handlerAdminAuthtest struct {
+	AdminAuthRepositorytest repositories.AdminAuth
+}
+
+func HandlerAdminAuthtest(AdminAuthRepositorytest repositories.AdminAuth) *handlerAdminAuthtest {
+	return &handlerAdminAuthtest{AdminAuthRepositorytest}
+}
+
+func (h *handlerAdminAuthtest) Logins(request *authdto.LoginRequest) (string, error) {
+
+	admin, err := h.AdminAuthRepositorytest.Login(request.Username)
+	if err != nil {
+		// update
+		// return errorhandler.ErrorHandler(c, err, "User Not Found", http.StatusBadRequest)
+	}
+	// Compare the provided password with the stored password hash using bcrypt.
+	isValid := bcrypt.CheckPasswordHash(request.Password, admin.Password)
+
+	if !isValid {
+		// update
+		// return errorhandler.ErrorHandler(c, err, "Incorrect Password", http.StatusBadRequest)
+	}
+
+	//generate a JWT token with the user's claims.
+	claims := jwt.MapClaims{}
+	claims["id"] = admin.ID
+	claims["name"] = admin.Username
+	claims["status"] = "admin"
+	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // Set token expiration to 2 hours from now.
+
+	//Generate the JWT token using the claims.
+	token, errGenerateToken := jwtToken.GenerateToken(&claims)
+	if errGenerateToken != nil {
+		log.Println(errGenerateToken)
+	}
+
+	return token, nil
+}
+
+func (h *handlerAdminAuthtest) Logins2(request *authdto.LoginRequest) (string, error) {
+
+	admin, err := h.AdminAuthRepositorytest.Login(request.Username)
+	if err != nil {
+		// update
+		// return errorhandler.ErrorHandler(c, err, "User Not Found", http.StatusBadRequest)
+	}
+	// Compare the provided password with the stored password hash using bcrypt.
+	isValid := bcrypt.CheckPasswordHash(request.Password, admin.Password)
+
+	if !isValid {
+		// update
+		// return errorhandler.ErrorHandler(c, err, "Incorrect Password", http.StatusBadRequest)
+	}
+
+	//generate a JWT token with the user's claims.
+	claims := jwt.MapClaims{}
+	claims["id"] = admin.ID
+	claims["name"] = admin.Username
+	claims["status"] = "admin"
+	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // Set token expiration to 2 hours from now.
+
+	//Generate the JWT token using the claims.
+	token, errGenerateToken := jwtToken.GenerateToken(&claims)
+	if errGenerateToken != nil {
+		log.Println(errGenerateToken)
+	}
+
+	return token, nil
+}
+
+type Authtest interface {
+	Logins(request *authdto.LoginRequest) (string, error)
+	Logins2(request *authdto.LoginRequest) (string, error)
 }

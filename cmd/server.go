@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"kredit-plus/internal/database"
 	"kredit-plus/internal/router"
+	"kredit-plus/pkg/database"
 	"kredit-plus/pkg/log"
 	"kredit-plus/pkg/mysql"
 	"kredit-plus/pkg/validate"
@@ -15,7 +15,7 @@ import (
 
 func RunServer() {
 
-	// dotEnv()
+	dotEnv()
 
 	e := echo.New()
 	initAllPkg(e)
