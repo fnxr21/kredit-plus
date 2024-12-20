@@ -9,5 +9,9 @@ dc-up:
 	docker-compose up -d
 dc-build:
 	docker build -t nxrfandi/kredit-plus:0.0.0.2 .
+
 dc-push:
 	docker push nxrfandi/kredit-plus:0.0.0.2
+
+sh:
+	./push.sh
