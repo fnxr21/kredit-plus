@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -35,7 +36,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, dto.ErrorResult{Status: http.StatusUnauthorized, Message: "unauthorized"})
 		}
 		status, _ := claims["status"].(string)
-		
+
 		switch status {
 		case "customer":
 			log.Println("customer", claims)
@@ -52,4 +53,26 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 	}
+}
+
+func GetUserIdFromContext(c echo.Context) int {
+	if c == nil {
+		return -1
+	}
+
+	// Check admin login
+	if accessLogin, ok := c.Get("adminLogin").(jwt.MapClaims); ok {
+		if id, ok := accessLogin["id"].(float64); ok {
+			return int(id)
+		}
+	}
+
+	// Check customer login
+	if userLogin, ok := c.Get("customerLogin").(jwt.MapClaims); ok {
+		if id, ok := userLogin["id"].(float64); ok {
+			return int(id)
+		}
+	}
+
+	return -1 // Return -1 if no valid login found
 }

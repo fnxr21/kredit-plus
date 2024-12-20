@@ -3,6 +3,7 @@ package cmd
 import (
 	"kredit-plus/internal/database"
 	"kredit-plus/internal/router"
+	"kredit-plus/pkg/log"
 	"kredit-plus/pkg/mysql"
 	"kredit-plus/pkg/validate"
 	"os"
@@ -17,20 +18,19 @@ func RunServer() {
 	// dotEnv()
 
 	e := echo.New()
-
-	mysql.DataBaseinit()
-	database.RunMigration()
+	initAllPkg(e)
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.POST, echo.PATCH, echo.DELETE},
 		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
 	}))
-	e.Validator = validate.New()
-
+	//route end point init
 	router.RouteInt(e.Group("/api/v1"))
+
 	PORT := os.Getenv("APP_PORT")
-	// default port
+
+	// default port 500
 	if PORT == "" {
 		PORT = "5000"
 	}
@@ -43,4 +43,13 @@ func dotEnv() {
 	if errEnv != nil {
 		panic("Failed to load env file")
 	}
+}
+
+func initAllPkg(e *echo.Echo) {
+	// connectdatabase
+	mysql.DataBaseinit()
+	database.RunMigration()
+
+	e.Validator = validate.New()
+	log.Init()
 }
