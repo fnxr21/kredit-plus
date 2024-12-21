@@ -2,6 +2,8 @@ package validate
 
 import (
 	"github.com/go-playground/validator/v10"
+	// validator "github.com/go-playground/validator/v10"
+
 )
 
 // CustomValidator wraps the validator.Validate instance
@@ -21,3 +23,4 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 func New() *CustomValidator {
 	return &CustomValidator{Validator: validator.New()}
 }
+

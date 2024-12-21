@@ -20,8 +20,9 @@ import (
 type AuthService interface {
 	LoginAdmin(request *authdto.LoginRequest) (string, error)
 	ReauthAdmin(id uint) (string, error)
-	RegisterAdmin(request admindto.RequestRegisterAdmin) (string, error)
+	RegisterAdmin(request *admindto.RequestRegisterAdmin) (string, error)
 }
+
 type serviceAdminAuth struct {
 	AdminAuthRepository repositories.AdminAuth
 }
@@ -34,7 +35,7 @@ func (h *serviceAdminAuth) LoginAdmin(request *authdto.LoginRequest) (string, er
 
 	admin, err := h.AdminAuthRepository.Login(request.Username)
 	if err != nil {
-		return "", err
+		return "Admin Not Found", err
 	}
 	// Compare the provided password with the stored password hash using bcrypt.
 	isValid := bcrypt.CheckPasswordHash(request.Password, admin.Password)
@@ -117,16 +118,3 @@ func (h *serviceAdminAuth) RegisterAdmin(request *admindto.RequestRegisterAdmin)
 
 }
 
-// func (h *serviceAdminAuth) LogoutAdmin(c echo.Context) error {
-// 	delete := &http.Cookie{
-// 		Name:     "Auth",
-// 		Value:    "none",
-// 		Expires:  time.Now(),
-// 		Path:     "/",
-// 		HttpOnly: true,
-// 	}
-// 	c.SetCookie(delete)
-
-// 	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: "Admin logged out successfully"})
-
-// }

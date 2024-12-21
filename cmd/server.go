@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	// "fmt"
+	"kredit-plus/internal/database"
 	"kredit-plus/internal/router"
-	"kredit-plus/pkg/database"
 	"kredit-plus/pkg/log"
 	"kredit-plus/pkg/mysql"
 	"kredit-plus/pkg/validate"
+	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -18,7 +20,21 @@ func RunServer() {
 	dotEnv()
 
 	e := echo.New()
-	initAllPkg(e)
+	mysql.DataBaseinit()
+	database.RunMigration()
+
+	e.Validator = validate.New()
+	e.HTTPErrorHandler = func(err error, c echo.Context) {
+		report, ok := err.(*echo.HTTPError)
+		if !ok {
+			report = echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+	
+		c.Logger().Error(report)
+		c.JSON(report.Code, report)
+	}
+	log.Init()
+	// initAllPkg(e)
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
