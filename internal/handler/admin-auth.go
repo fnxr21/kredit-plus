@@ -43,7 +43,6 @@ func (r *handlerAdminAuth) LoginAdmin(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 	err := c.Validate(request)
-	// validator.ValidationErrors
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
 
@@ -68,16 +67,20 @@ func (r *handlerAdminAuth) LoginAdmin(c echo.Context) error {
 		return errorhandler.ErrorHandler(c, err, err.Error(), http.StatusBadRequest)
 	}
 
-	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: token})
+	Token:= Token{Token :token}
+	return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: Token})
 }
 
+type Token struct{
+	Token string
+}
 func (h *handlerAdminAuth) ReauthAdmin(c echo.Context) error {
 	adminLogin := c.Get("adminLogin")
 	adminID := adminLogin.(jwt.MapClaims)["id"].(float64)
 
 	user, err := h.AdminAuthService.ReauthAdmin(uint(adminID))
 	if err != nil {
-		return errorhandler.ErrorHandler(c, err, "Admin Not Found", http.StatusUnauthorized)
+		return errorhandler.ErrorHandler(c, err, user, http.StatusUnauthorized)
 	}
 
 	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user + " " + "Still Active"})
@@ -91,14 +94,28 @@ func (h *handlerAdminAuth) RegisterAdmin(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	error := c.Validate(request)
-	if error != nil {
-		return errorhandler.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
+	err := c.Validate(request)
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+
+			switch err.Tag() {
+			case "required":
+				return errorhandler.HandlerValidationError(c, http.StatusBadRequest, fmt.Sprintf("%s is required", err.Field()))
+			case err.Tag():
+				return errorhandler.HandlerValidationError(c, http.StatusBadRequest, fmt.Sprintf("%s is not valid "+err.Tag(), err.Field()))
+			case "gte":
+				errorhandler.HandlerValidationError(c, http.StatusBadRequest, fmt.Sprintf("%s value must be greater than %s",
+					err.Field(), err.Param()))
+			case "lte":
+				errorhandler.HandlerValidationError(c, http.StatusBadRequest, fmt.Sprintf("%s value must be lower than %s",
+					err.Field(), err.Param()))
+			}
+		}
 	}
 
 	user, err := h.AdminAuthService.RegisterAdmin(request)
 	if err != nil {
-		return errorhandler.ErrorHandler(c, err, "Admin Not Found", http.StatusUnauthorized)
+		return errorhandler.ErrorHandler(c, err, user, http.StatusUnauthorized)
 	}
 
 	return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user + " " + "Register"})

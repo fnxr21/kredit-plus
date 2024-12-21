@@ -37,70 +37,46 @@ func (h *serviceAdminAuth) LoginAdmin(request *authdto.LoginRequest) (string, er
 	if err != nil {
 		return "Admin Not Found", err
 	}
-	// Compare the provided password with the stored password hash using bcrypt.
 	isValid := bcrypt.CheckPasswordHash(request.Password, admin.Password)
 
 	if !isValid {
-		return "", err
-		// return errorservice.ErrorHandler(c, err, "Incorrect Password", http.StatusBadRequest)
+		return "Password Incorect", err
 	}
 
-	//generate a JWT token with the user's claims.
 	claims := jwt.MapClaims{}
 	claims["id"] = admin.ID
 	claims["name"] = admin.Username
 	claims["status"] = "admin"
-	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // Set token expiration to 2 hours from now.
+	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
 
-	//Generate the JWT token using the claims.
 	token, errGenerateToken := jwtToken.GenerateToken(&claims)
 	if errGenerateToken != nil {
 		log.Println(errGenerateToken)
-		return "", err
+		return "Failed Generate", err
 
-		// return echo.NewHTTPError(http.StatusUnauthorized)
 	}
-	// response := authdto.LoginResponse{
-	// 	Token: token,
-	// }
 
 	return token, nil
 
-	// return c.JSON(http.StatusOK, dto.SuccessResult{Status: http.StatusOK, Data: response})
 }
 
-// func (h *serviceAdminAuth) ReauthAdmin(c echo.Context) error {
 func (h *serviceAdminAuth) ReauthAdmin(id uint) (string, error) {
-	// adminLogin := c.Get("adminLogin")
-	// adminID := adminLogin.(jwt.MapClaims)["id"].(float64)
 
 	user, err := h.AdminAuthRepository.Reauth(id)
 	if err != nil {
-		return "", err
-		// return errorservice.ErrorHandler(c, err, "Admin Not Found", http.StatusUnauthorized)
+
+		return "Admin Not Found", err
 	}
 
 	return user.Username, nil
-	// return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "Still Active"})
 
 }
 
 func (h *serviceAdminAuth) RegisterAdmin(request *admindto.RequestRegisterAdmin) (string, error) {
-	// request := new(admindto.RequestRegisterAdmin)
 
-	// if err := c.Bind(request); err != nil {
-	// 	return c.JSON(http.StatusBadRequest, dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
-	// }
-
-	// error := c.Validate(request)
-
-	// if error != nil {
-	// 	return errorservice.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
-	// }
 	pass, err := bcrypt.HashingPassword(request.Password)
 	if err != nil {
-		return "", err
-		// return errorservice.ErrorHandler(c, error, error.Error(), http.StatusBadRequest)
+		return "Failed Hashing Password", err
 	}
 	admin := models.MyUser{
 		Username:    request.Username,
@@ -110,11 +86,8 @@ func (h *serviceAdminAuth) RegisterAdmin(request *admindto.RequestRegisterAdmin)
 	}
 	user, err := h.AdminAuthRepository.Register(admin)
 	if err != nil {
-		return "", err
-		// return errorservice.ErrorHandler(c, err, "Register Failed", http.StatusUnauthorized)
+		return "Failed Register", err
 	}
 	return user.Username + " " + "Register", nil
-	// return c.JSON(http.StatusOK, dto.SuccessReauth{Status: http.StatusOK, Data: user.Username + " " + "Register"})
 
 }
-
